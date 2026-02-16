@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التحليل الجيوسياسي - إفريقيا والساحل</title>
+    <style>
+        :root {
+            --color-bg-primary: #0f172a;
+            --color-bg-secondary: #1e293b;
+            --color-bg-elevated: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-text-muted: #94a3b8;
+            --color-accent: #38bdf8;
+            --color-accent-hover: #0ea5e9;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-border: rgba(148, 163, 184, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--color-bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--color-accent);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: var(--color-bg-elevated);
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .tab-btn.active {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            border-color: var(--color-accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h3 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .status-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+
+        .status-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .map-container {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 2rem;
+            height: 550px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            color: var(--color-text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .timeline {
+            position: relative;
+            padding-right: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-right: 2rem;
+            padding-bottom: 2rem;
+            border-right: 2px solid var(--color-border);
+        }
+
+        .timeline-item:last-child {
+            border-right: none;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            right: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 3px solid var(--color-bg-primary);
+        }
+
+        .timeline-content {
+            background: var(--color-bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .timeline-date {
+            color: var(--color-accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            color: var(--color-text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .country-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .country-item {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .country-item:hover {
+            background: var(--color-bg-elevated);
+        }
+
+        .country-name {
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .country-info {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .analysis-section {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-section h3 {
+            color: var(--color-accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .analysis-content {
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+        }
+
+        .analysis-content ul {
+            margin-right: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .analysis-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-hover);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🌍 منصة التحليل الجيوسياسي - إفريقيا والساحل الإفريقي</h1>
+        <p>تحليل شامل للأحداث الأمنية والجيوسياسية في المنطقة</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">لوحة التحكم</button>
+            <button class="tab-btn" onclick="switchTab('threats')">التهديدات الأمنية</button>
+            <button class="tab-btn" onclick="switchTab('timeline')">الخط الزمني</button>
+            <button class="tab-btn" onclick="switchTab('countries')">دول المنطقة</button>
+            <button class="tab-btn" onclick="switchTab('analysis')">التحليلات</button>
+            <button class="tab-btn" onclick="switchTab('expert')">تحليلات الخبراء</button>
+            <button class="tab-btn" onclick="switchTab('upload')">رفع الملفات</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">دول الساحل الإفريقي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">54</div>
+                    <div class="stat-label">دول القارة الإفريقية</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">تهديدات نشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">147</div>
+                    <div class="stat-label">تقرير تحليلي</div>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/d/embed?mid=1JJZd9FjYw_NSLH9FJCNBKzVaXDw&ehbc=2E312F" 
+                    width="100%" 
+                    height="500" 
+                    style="border:0; border-radius: 8px;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+            <h2 style="color: var(--color-accent); margin-bottom: 1.5rem;">آخر التطورات</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>🔴 التهديدات الإرهابية</h3>
+                    <div class="card-content">
+                        <p>زيادة في نشاط الجماعات المسلحة في منطقة الساحل الأوسط، مع تركيز على الحدود بين مالي والنيجر وبوركينا فاسو.</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>⚠️ الانقلابات العسكرية</h3>
+                    <div class="card-content">
+                        <p>تحليل لموجة الانقلابات العسكرية التي شهدتها دول الساحل منذ 2020، وتأثيرها على الاستقرار الإقليمي.</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🌊 الهجرة غير الشرعية</h3>
+                    <div class="card-content">
+                        <p>تصاعد أزمة الهجرة عبر الصحراء والبحر المتوسط، مع تحديات أمنية وإنسانية كبيرة.</p>
+                        <span class="status-badge status-medium">خطورة متوسطة</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>💰 التنافس الدولي</h3>
+                    <div class="card-content">
+                        <p>التنافس الجيوسياسي بين القوى الدولية (فرنسا، روسيا، الصين، تركيا) على النفوذ في المنطقة.</p>
+                        <span class="status-badge status-medium">خطورة متوسطة</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🌡️ التغير المناخي</h3>
+                    <div class="card-content">
+                        <p>تأثير التصحر والجفاف على الأمن الغذائي والنزاعات حول الموارد الطبيعية في منطقة الساحل.</p>
+                        <span class="status-badge status-medium">خطورة متوسطة</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🤝 التعاون الإقليمي</h3>
+                    <div class="card-content">
+                        <p>جهود التكامل الإقليمي من خلال الاتحاد الإفريقي والمنظمات دون الإقليمية لمواجهة التحديات المشتركة.</p>
+                        <span class="status-badge status-low">خطورة منخفضة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threats Tab -->
+        <div id="threats" class="tab-content">
+            <div class="filters">
+                <div class="filter-group">
+                    <label>نوع التهديد</label>
+                    <select id="threatType" onchange="filterThreats()">
+                        <option value="all">جميع التهديدات</option>
+                        <option value="terrorism">إرهاب</option>
+                        <option value="political">عدم استقرار سياسي</option>
+                        <option value="social">أزمات اجتماعية</option>
+                        <option value="environmental">بيئية</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>مستوى الخطورة</label>
+                    <select id="severityLevel" onchange="filterThreats()">
+                        <option value="all">جميع المستويات</option>
+                        <option value="high">عالية</option>
+                        <option value="medium">متوسطة</option>
+                        <option value="low">منخفضة</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>الدولة</label>
+                    <select id="countryFilter" onchange="filterThreats()">
+                        <option value="all">جميع الدول</option>
+                        <option value="mali">مالي</option>
+                        <option value="niger">النيجر</option>
+                        <option value="burkina">بوركينا فاسو</option>
+                        <option value="chad">تشاد</option>
+                        <option value="nigeria">نيجيريا</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid" id="threatsGrid">
+                <div class="card" data-type="terrorism" data-severity="high" data-country="mali">
+                    <h3>🎯 جماعة نصرة الإسلام والمسلمين</h3>
+                    <div class="card-content">
+                        <p><strong>الموقع:</strong> شمال ووسط مالي</p>
+                        <p><strong>النشاط:</strong> هجمات على القوات العسكرية والمدنيين</p>
+                        <p><strong>التحليل:</strong> التنظيم الأكثر نشاطاً في منطقة الساحل، مرتبط بتنظيم القاعدة</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card" data-type="terrorism" data-severity="high" data-country="nigeria">
+                    <h3>💣 بوكو حرام</h3>
+                    <div class="card-content">
+                        <p><strong>الموقع:</strong> شمال شرق نيجيريا وحوض بحيرة تشاد</p>
+                        <p><strong>النشاط:</strong> هجمات إرهابية وخطف واستهداف المدارس</p>
+                        <p><strong>التحليل:</strong> تنظيم متشدد يهدد استقرار منطقة حوض بحيرة تشاد</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card" data-type="terrorism" data-severity="high" data-country="niger">
+                    <h3>⚔️ تنظيم الدولة في الصحراء الكبرى</h3>
+                    <div class="card-content">
+                        <p><strong>الموقع:</strong> منطقة الحدود الثلاثية (مالي، النيجر، بوركينا فاسو)</p>
+                        <p><strong>النشاط:</strong> هجمات على المواقع العسكرية والبنية التحتية</p>
+                        <p><strong>التحليل:</strong> فرع من تنظيم داعش يتوسع في المنطقة</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card" data-type="political" data-severity="high" data-country="burkina">
+                    <h3>🏛️ الانقلاب العسكري في بوركينا فاسو</h3>
+                    <div class="card-content">
+                        <p><strong>التاريخ:</strong> سبتمبر 2022</p>
+                        <p><strong>التأثير:</strong> عدم استقرار سياسي وأمني متزايد</p>
+                        <p><strong>التحليل:</strong> انقلاب ثانٍ خلال عام واحد يعكس أزمة حكم عميقة</p>
+                        <span class="status-badge status-high">خطورة عالية</span>
+                    </div>
+                </div>
+                <div class="card" data-type="social" data-severity="medium" data-country="mali">
+                    <h3>🚶 النزوح القسري</h3>
+                    <div class="card-content">
+                        <p><strong>الأعداد:</strong> أكثر من 3 ملايين نازح في منطقة الساحل</p>
+                        <p><strong>الأسباب:</strong> الصراعات المسلحة والتغير المناخي</p>
+                        <p><strong>التحليل:</strong> أزمة إنسانية متفاقمة تهدد الاستقرار الاجتماعي</p>
+                        <span class="status-badge status-medium">خطورة متوسطة</span>
+                    </div>
+                </div>
+                <div class="card" data-type="environmental" data-severity="medium" data-country="chad">
+                    <h3>🌊 جفاف بحيرة تشاد</h3>
+                    <div class="card-content">
+                        <p><strong>الحجم:</strong> انكماش بنسبة 90% منذ الستينيات</p>
+                        <p><strong>التأثير:</strong> نزاعات على الموارد المائية وتدهور الأمن الغذائي</p>
+                        <p><strong>التحليل:</strong> كارثة بيئية تزيد التوترات الإقليمية</p>
+                        <span class="status-badge status-medium">خطورة متوسطة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Tab -->
+        <div id="timeline" class="tab-content">
+            <h2 style="color: var(--color-accent); margin-bottom: 2rem;">الأحداث الرئيسية في منطقة الساحل</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024</div>
+                        <div class="timeline-title">تشكيل تحالف دول الساحل</div>
+                        <div class="timeline-desc">مالي، النيجر، وبوركينا فاسو تشكل تحالفاً عسكرياً واقتصادياً بعد الانسحاب من المجموعة الاقتصادية لدول غرب إفريقيا (ECOWAS).</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2023</div>
+                        <div class="timeline-title">الانقلاب العسكري في النيجر</div>
+                        <div class="timeline-desc">الإطاحة بالرئيس محمد بازوم في يوليو 2023، مما أدى إلى أزمة دبلوماسية إقليمية ودولية.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022</div>
+                        <div class="timeline-title">انسحاب القوات الفرنسية من مالي</div>
+                        <div class="timeline-desc">إنهاء عملية برخان الفرنسية بعد تسع سنوات من التدخل العسكري في المنطقة.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021</div>
+                        <div class="timeline-title">الانقلاب العسكري في تشاد</div>
+                        <div class="timeline-desc">مقتل الرئيس إدريس ديبي وتولي نجله محمد السلطة عبر مجلس عسكري انتقالي.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020</div>
+                        <div class="timeline-title">الانقلاب العسكري في مالي</div>
+                        <div class="timeline-desc">الإطاحة بالرئيس إبراهيم بوبكر كيتا، بداية موجة الانقلابات في منطقة الساحل.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2014</div>
+                        <div class="timeline-title">إطلاق عملية برخان الفرنسية</div>
+                        <div class="timeline-desc">بداية التدخل العسكري الفرنسي الموسع في منطقة الساحل لمكافحة الإرهاب.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2012</div>
+                        <div class="timeline-title">الأزمة المالية والتدخل الفرنسي</div>
+                        <div class="timeline-desc">سقوط شمال مالي بيد الجماعات المسلحة، وبداية عملية سرفال الفرنسية لاستعادة السيطرة.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countries Tab -->
+        <div id="countries" class="tab-content">
+            <h2 style="color: var(--color-accent); margin-bottom: 1.5rem;">دول منطقة الساحل الإفريقي</h2>
+            <div class="country-list">
+                <div class="country-item" onclick="showCountryDetails('موريتانيا')">
+                    <div>
+                        <div class="country-name">🇲🇷 موريتانيا</div>
+                        <div class="country-info">العاصمة: نواكشوط | السكان: 4.7 مليون</div>
+                    </div>
+                    <span class="status-badge status-medium">استقرار نسبي</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('مالي')">
+                    <div>
+                        <div class="country-name">🇲🇱 مالي</div>
+                        <div class="country-info">العاصمة: باماكو | السكان: 21.9 مليون</div>
+                    </div>
+                    <span class="status-badge status-high">عدم استقرار</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('النيجر')">
+                    <div>
+                        <div class="country-name">🇳🇪 النيجر</div>
+                        <div class="country-info">العاصمة: نيامي | السكان: 25.2 مليون</div>
+                    </div>
+                    <span class="status-badge status-high">عدم استقرار</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('تشاد')">
+                    <div>
+                        <div class="country-name">🇹🇩 تشاد</div>
+                        <div class="country-info">العاصمة: نجامينا | السكان: 17.4 مليون</div>
+                    </div>
+                    <span class="status-badge status-medium">انتقال سياسي</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('السنغال')">
+                    <div>
+                        <div class="country-name">🇸🇳 السنغال</div>
+                        <div class="country-info">العاصمة: داكار | السكان: 17.2 مليون</div>
+                    </div>
+                    <span class="status-badge status-low">استقرار ديمقراطي</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('بوركينا فاسو')">
+                    <div>
+                        <div class="country-name">🇧🇫 بوركينا فاسو</div>
+                        <div class="country-info">العاصمة: واغادوغو | السكان: 22.1 مليون</div>
+                    </div>
+                    <span class="status-badge status-high">عدم استقرار حاد</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('نيجيريا')">
+                    <div>
+                        <div class="country-name">🇳🇬 نيجيريا</div>
+                        <div class="country-info">العاصمة: أبوجا | السكان: 218 مليون</div>
+                    </div>
+                    <span class="status-badge status-medium">تهديدات أمنية</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('الكاميرون')">
+                    <div>
+                        <div class="country-name">🇨🇲 الكاميرون</div>
+                        <div class="country-info">العاصمة: ياوندي | السكان: 27.9 مليون</div>
+                    </div>
+                    <span class="status-badge status-medium">نزاعات إقليمية</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('السودان')">
+                    <div>
+                        <div class="country-name">🇸🇩 السودان</div>
+                        <div class="country-info">العاصمة: الخرطوم | السكان: 45.7 مليون</div>
+                    </div>
+                    <span class="status-badge status-high">صراع مسلح</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('إريتريا')">
+                    <div>
+                        <div class="country-name">🇪🇷 إريتريا</div>
+                        <div class="country-info">العاصمة: أسمرة | السكان: 3.6 مليون</div>
+                    </div>
+                    <span class="status-badge status-medium">عزلة دولية</span>
+                </div>
+                <div class="country-item" onclick="showCountryDetails('جيبوتي')">
+                    <div>
+                        <div class="country-name">🇩🇯 جيبوتي</div>
+                        <div class="country-info">العاصمة: جيبوتي | السكان: 1 مليون</div>
+                    </div>
+                    <span class="status-badge status-low">استقرار استراتيجي</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expert Analysis Tab -->
+        <div id="expert" class="tab-content">
+            <h2 style="color: var(--color-accent); margin-bottom: 1.5rem;">📝 تحليلات الخبراء والباحثين</h2>
+            
+            <div class="analysis-section">
+                <h3>إضافة تحليل جديد</h3>
+                <div style="margin-top: 1.5rem;">
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>اسم الخبير / الباحث</label>
+                        <input type="text" id="expertName" placeholder="أدخل اسمك الكامل">
+                    </div>
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>المنصب / التخصص</label>
+                        <input type="text" id="expertTitle" placeholder="مثال: باحث في الجيوسياسيا - جامعة الجزائر">
+                    </div>
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>عنوان التحليل</label>
+                        <input type="text" id="analysisTitle" placeholder="عنوان التحليل أو البحث">
+                    </div>
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>نوع التحليل</label>
+                        <select id="analysisType">
+                            <option value="security">أمني</option>
+                            <option value="political">سياسي</option>
+                            <option value="economic">اقتصادي</option>
+                            <option value="social">اجتماعي</option>
+                            <option value="environmental">بيئي</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>الدولة المعنية</label>
+                        <select id="analysisCountry">
+                            <option value="regional">إقليمي (كل المنطقة)</option>
+                            <option value="mauritania">موريتانيا</option>
+                            <option value="mali">مالي</option>
+                            <option value="niger">النيجر</option>
+                            <option value="chad">تشاد</option>
+                            <option value="senegal">السنغال</option>
+                            <option value="burkina">بوركينا فاسو</option>
+                            <option value="nigeria">نيجيريا</option>
+                            <option value="cameroon">الكاميرون</option>
+                            <option value="sudan">السودان</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>محتوى التحليل</label>
+                        <textarea id="analysisContent" rows="8" style="width: 100%; padding: 0.75rem; background: var(--color-bg-elevated); border: 1px solid var(--color-border); color: var(--color-text-primary); border-radius: 8px; font-size: 0.95rem; font-family: inherit; resize: vertical;" placeholder="اكتب تحليلك هنا... يمكنك تضمين الملاحظات، الاستنتاجات، والتوصيات"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="submitAnalysis()">📤 نشر التحليل</button>
+                </div>
+            </div>
+
+            <h2 style="color: var(--color-accent); margin: 3rem 0 1.5rem 0;">التحليلات المنشورة</h2>
+            <div id="expertAnalysisList" class="grid">
+                <!-- Sample Expert Analysis -->
+                <div class="card">
+                    <h3>🔍 الانقلابات العسكرية وأثرها على الاستقرار الإقليمي</h3>
+                    <div class="card-content">
+                        <p style="color: var(--color-accent); font-weight: 600; margin-bottom: 0.5rem;">د. أحمد بن صالح</p>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">أستاذ العلاقات الدولية - المدرسة الوطنية العليا للعلوم السياسية</p>
+                        <p style="margin-bottom: 0.75rem;"><strong>النوع:</strong> تحليل سياسي | <strong>النطاق:</strong> إقليمي</p>
+                        <p style="line-height: 1.7;">تشير البيانات إلى أن موجة الانقلابات في منطقة الساحل منذ 2020 ليست ظاهرة عشوائية، بل نتيجة لتراكمات سياسية واقتصادية عميقة. العامل المشترك هو فشل النخب الحاكمة في معالجة التهديدات الأمنية وتحقيق التنمية...</p>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 1rem;">📅 تاريخ النشر: 15 فبراير 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Files Tab -->
+        <div id="upload" class="tab-content">
+            <h2 style="color: var(--color-accent); margin-bottom: 1.5rem;">📁 رفع الملفات والوثائق</h2>
+            
+            <div class="analysis-section">
+                <h3>رفع ملف جديد</h3>
+                <div class="card-content" style="margin-top: 1.5rem;">
+                    <p style="margin-bottom: 1.5rem; line-height: 1.8;">يمكنك رفع الوثائق، التقارير، الخرائط، الدراسات، والملفات ذات الصلة بالتحليل الجيوسياسي لمنطقة الساحل الإفريقي.</p>
+                    
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>اسم صاحب الملف</label>
+                        <input type="text" id="uploaderName" placeholder="اسمك الكامل">
+                    </div>
+                    
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>عنوان الملف</label>
+                        <input type="text" id="fileTitle" placeholder="عنوان توضيحي للملف">
+                    </div>
+                    
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>نوع الملف</label>
+                        <select id="fileType">
+                            <option value="report">تقرير بحثي</option>
+                            <option value="map">خريطة</option>
+                            <option value="study">دراسة أكاديمية</option>
+                            <option value="data">بيانات وإحصائيات</option>
+                            <option value="article">مقال</option>
+                            <option value="presentation">عرض تقديمي</option>
+                            <option value="document">وثيقة رسمية</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group" style="margin-bottom: 1rem;">
+                        <label>وصف الملف</label>
+                        <textarea id="fileDescription" rows="4" style="width: 100%; padding: 0.75rem; background: var(--color-bg-elevated); border: 1px solid var(--color-border); color: var(--color-text-primary); border-radius: 8px; font-size: 0.95rem; font-family: inherit; resize: vertical;" placeholder="وصف مختصر لمحتوى الملف"></textarea>
+                    </div>
+                    
+                    <div class="filter-group" style="margin-bottom: 1.5rem;">
+                        <label>اختيار الملف</label>
+                        <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" style="width: 100%; padding: 0.75rem; background: var(--color-bg-elevated); border: 1px solid var(--color-border); color: var(--color-text-primary); border-radius: 8px; font-size: 0.95rem; cursor: pointer;">
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.5rem;">الصيغ المدعومة: PDF, Word, PowerPoint, Excel, صور (حتى 25 ميجابايت)</p>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="uploadFile()">📤 رفع الملف</button>
+                </div>
+            </div>
+
+            <h2 style="color: var(--color-accent); margin: 3rem 0 1.5rem 0;">الملفات المرفوعة</h2>
+            <div id="uploadedFilesList">
+                <div class="country-list">
+                    <!-- Sample Files -->
+                    <div class="country-item">
+                        <div>
+                            <div class="country-name">📄 تقرير: تحليل الوضع الأمني في منطقة الساحل 2024</div>
+                            <div class="country-info">رفع بواسطة: د. فاطمة الزهراء | نوع: تقرير بحثي | التاريخ: 14 فبراير 2026</div>
+                        </div>
+                        <span class="status-badge status-low">PDF - 2.4 MB</span>
+                    </div>
+                    
+                    <div class="country-item">
+                        <div>
+                            <div class="country-name">🗺️ خريطة: توزيع الجماعات المسلحة في مالي والنيجر</div>
+                            <div class="country-info">رفع بواسطة: محمد الأمين | نوع: خريطة | التاريخ: 12 فبراير 2026</div>
+                        </div>
+                        <span class="status-badge status-low">PNG - 3.1 MB</span>
+                    </div>
+                    
+                    <div class="country-item">
+                        <div>
+                            <div class="country-name">📊 دراسة: تأثير التغير المناخي على الأمن الغذائي في الساحل</div>
+                            <div class="country-info">رفع بواسطة: أ. ليلى بن عمر | نوع: دراسة أكاديمية | التاريخ: 10 فبراير 2026</div>
+                        </div>
+                        <span class="status-badge status-low">DOCX - 1.8 MB</span>
+                    </div>
+                    
+                    <div class="country-item">
+                        <div>
+                            <div class="country-name">📈 بيانات: إحصائيات النزوح القسري في منطقة الساحل (2020-2024)</div>
+                            <div class="country-info">رفع بواسطة: مركز البحوث الإقليمية | نوع: بيانات وإحصائيات | التاريخ: 8 فبراير 2026</div>
+                        </div>
+                        <span class="status-badge status-low">XLSX - 856 KB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <div class="analysis-section">
+                <h3>📊 التحليل الجيوسياسي الشامل لمنطقة الساحل</h3>
+                <div class="analysis-content">
+                    <p>تشهد منطقة الساحل الإفريقي تحولات جيوسياسية عميقة تعيد تشكيل خريطة النفوذ الإقليمي والدولي. يمكن تحديد العوامل الرئيسية التالية:</p>
+                    
+                    <h4 style="color: var(--color-accent); margin-top: 1.5rem; margin-bottom: 1rem;">العوامل الأمنية</h4>
+                    <ul>
+                        <li><strong>انتشار الجماعات المسلحة:</strong> تنامي نشاط التنظيمات الإرهابية المرتبطة بالقاعدة وداعش، مع استغلال الفراغ الأمني والحكومي.</li>
+                        <li><strong>التجارة غير المشروعة:</strong> ازدهار تجارة المخدرات والأسلحة والبشر عبر الطرق الصحراوية.</li>
+                        <li><strong>الهجمات المتكررة:</strong> استهداف القوات العسكرية والمدنيين والبنية التحتية بشكل متزايد.</li>
+                    </ul>
+
+                    <h4 style="color: var(--color-accent); margin-top: 1.5rem; margin-bottom: 1rem;">العوامل السياسية</h4>
+                    <ul>
+                        <li><strong>موجة الانقلابات:</strong> سلسلة من التغييرات العسكرية في مالي، تشاد، غينيا، السودان، بوركينا فاسو، والنيجر منذ 2020.</li>
+                        <li><strong>أزمة الحكم:</strong> فشل الأنظمة الديمقراطية في تلبية احتياجات المواطنين ومكافحة الفساد.</li>
+                        <li><strong>الشرعية المتراجعة:</strong> فقدان ثقة الشعوب في المؤسسات التقليدية والقيادات السياسية.</li>
+                    </ul>
+
+                    <h4 style="color: var(--color-accent); margin-top: 1.5rem; margin-bottom: 1rem;">الصراع على النفوذ</h4>
+                    <ul>
+                        <li><strong>فرنسا:</strong> تراجع النفوذ الفرنسي التقليدي بعد انسحاب القوات العسكرية ورفض النخب الجديدة للوصاية.</li>
+                        <li><strong>روسيا:</strong> توسع الحضور الروسي عبر مجموعة فاغنر والتعاون العسكري والاقتصادي.</li>
+                        <li><strong>الصين:</strong> استثمارات ضخمة في البنية التحتية والطاقة ضمن مبادرة الحزام والطريق.</li>
+                        <li><strong>تركيا:</strong> نفوذ متزايد من خلال المساعدات الإنسانية والتعاون الدفاعي والديني.</li>
+                        <li><strong>الولايات المتحدة:</strong> تواجد عسكري محدود وتركيز على مكافحة الإرهاب.</li>
+                    </ul>
+
+                    <h4 style="color: var(--color-accent); margin-top: 1.5rem; margin-bottom: 1rem;">التحديات البنيوية</h4>
+                    <ul>
+                        <li><strong>التغير المناخي:</strong> التصحر والجفاف يهددان الأمن الغذائي ويزيدان النزاعات على الموارد.</li>
+                        <li><strong>النمو الديموغرافي:</strong> معدلات نمو سكاني مرتفعة مع محدودية الموارد والخدمات.</li>
+                        <li><strong>الفقر والبطالة:</strong> معدلات فقر مرتفعة وبطالة بين الشباب تغذي التطرف.</li>
+                        <li><strong>ضعف البنية التحتية:</strong> نقص في الطرق والكهرباء والمياه والتعليم والصحة.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <h3>🔮 السيناريوهات المستقبلية</h3>
+                <div class="analysis-content">
+                    <h4 style="color: var(--color-success); margin-bottom: 1rem;">السيناريو الإيجابي</h4>
+                    <ul>
+                        <li>نجاح التعاون الإقليمي في مواجهة التهديدات الأمنية المشتركة</li>
+                        <li>استقرار سياسي تدريجي بعد المرحلة الانتقالية</li>
+                        <li>استثمارات في التنمية والبنية التحتية</li>
+                        <li>معالجة الأسباب الجذرية للتطرف والفقر</li>
+                    </ul>
+
+                    <h4 style="color: var(--color-warning); margin-top: 1.5rem; margin-bottom: 1rem;">السيناريو المحايد</h4>
+                    <ul>
+                        <li>استمرار الوضع الراهن مع تقلبات أمنية وسياسية</li>
+                        <li>تعايش القوى الإقليمية والدولية في توازنات هشة</li>
+                        <li>نمو اقتصادي محدود مع استمرار التحديات البنيوية</li>
+                        <li>تفاوت في الاستقرار بين دول المنطقة</li>
+                    </ul>
+
+                    <h4 style="color: var(--color-danger); margin-top: 1.5rem; margin-bottom: 1rem;">السيناريو السلبي</h4>
+                    <ul>
+                        <li>تصاعد العنف وانتشار الفوضى في مناطق أوسع</li>
+                        <li>انهيار الدول وتفكك السلطة المركزية</li>
+                        <li>موجات نزوح ولجوء جماعية نحو أوروبا</li>
+                        <li>تحول المنطقة إلى ساحة صراع بين القوى الدولية</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <h3>💡 التوصيات الاستراتيجية</h3>
+                <div class="analysis-content">
+                    <ul>
+                        <li><strong>للدول الإقليمية:</strong> تعزيز التعاون الأمني والاقتصادي، والاستثمار في الحكم الرشيد والتنمية المحلية.</li>
+                        <li><strong>للاتحاد الإفريقي:</strong> دعم الحلول الإفريقية للمشاكل الإفريقية، وتفعيل آليات الوساطة والتدخل السريع.</li>
+                        <li><strong>للمجتمع الدولي:</strong> دعم التنمية المستدامة بدلاً من التركيز على الحلول العسكرية فقط، واحترام سيادة الدول.</li>
+                        <li><strong>للمنظمات الإنسانية:</strong> التركيز على بناء القدرات المحلية ومعالجة الأزمات الإنسانية الناتجة عن النزوح والجوع.</li>
+                        <li><strong>للباحثين والأكاديميين:</strong> تعميق الدراسات حول الديناميكيات المحلية وإنتاج معرفة سياقية دقيقة.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function filterThreats() {
+            const threatType = document.getElementById('threatType').value;
+            const severity = document.getElementById('severityLevel').value;
+            const country = document.getElementById('countryFilter').value;
+            
+            const cards = document.querySelectorAll('#threatsGrid .card');
+            
+            cards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const cardSeverity = card.getAttribute('data-severity');
+                const cardCountry = card.getAttribute('data-country');
+                
+                let show = true;
+                
+                if (threatType !== 'all' && cardType !== threatType) {
+                    show = false;
+                }
+                
+                if (severity !== 'all' && cardSeverity !== severity) {
+                    show = false;
+                }
+                
+                if (country !== 'all' && cardCountry !== country) {
+                    show = false;
+                }
+                
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function showCountryDetails(countryName) {
+            alert('عرض تفاصيل: ' + countryName + '\n\nسيتم إضافة صفحة تفاصيل شاملة لكل دولة في النسخة المحدثة.');
+        }
+
+        function submitAnalysis() {
+            const expertName = document.getElementById('expertName').value;
+            const expertTitle = document.getElementById('expertTitle').value;
+            const analysisTitle = document.getElementById('analysisTitle').value;
+            const analysisType = document.getElementById('analysisType').value;
+            const analysisCountry = document.getElementById('analysisCountry').value;
+            const analysisContent = document.getElementById('analysisContent').value;
+            
+            if (!expertName || !expertTitle || !analysisTitle || !analysisContent) {
+                alert('⚠️ يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            const typeLabels = {
+                'security': 'أمني',
+                'political': 'سياسي',
+                'economic': 'اقتصادي',
+                'social': 'اجتماعي',
+                'environmental': 'بيئي'
+            };
+            
+            const countryLabels = {
+                'regional': 'إقليمي',
+                'mauritania': 'موريتانيا',
+                'mali': 'مالي',
+                'niger': 'النيجر',
+                'chad': 'تشاد',
+                'senegal': 'السنغال',
+                'burkina': 'بوركينا فاسو',
+                'nigeria': 'نيجيريا',
+                'cameroon': 'الكاميرون',
+                'sudan': 'السودان'
+            };
+            
+            const today = new Date().toLocaleDateString('ar-DZ', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const newAnalysis = `
+                <div class="card">
+                    <h3>🔍 ${analysisTitle}</h3>
+                    <div class="card-content">
+                        <p style="color: var(--color-accent); font-weight: 600; margin-bottom: 0.5rem;">${expertName}</p>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">${expertTitle}</p>
+                        <p style="margin-bottom: 0.75rem;"><strong>النوع:</strong> ${typeLabels[analysisType]} | <strong>النطاق:</strong> ${countryLabels[analysisCountry]}</p>
+                        <p style="line-height: 1.7;">${analysisContent}</p>
+                        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 1rem;">📅 تاريخ النشر: ${today}</p>
+                    </div>
+                </div>
+            `;
+            
+            const analysisList = document.getElementById('expertAnalysisList');
+            analysisList.insertAdjacentHTML('afterbegin', newAnalysis);
+            
+            document.getElementById('expertName').value = '';
+            document.getElementById('expertTitle').value = '';
+            document.getElementById('analysisTitle').value = '';
+            document.getElementById('analysisContent').value = '';
+            
+            alert('✅ تم نشر التحليل بنجاح!');
+        }
+
+        function uploadFile() {
+            const uploaderName = document.getElementById('uploaderName').value;
+            const fileTitle = document.getElementById('fileTitle').value;
+            const fileType = document.getElementById('fileType').value;
+            const fileDescription = document.getElementById('fileDescription').value;
+            const fileInput = document.getElementById('fileUpload');
+            
+            if (!uploaderName || !fileTitle || !fileDescription) {
+                alert('⚠️ يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('⚠️ يرجى اختيار ملف للرفع');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+            const fileExtension = file.name.split('.').pop().toUpperCase();
+            
+            if (file.size > 25 * 1024 * 1024) {
+                alert('⚠️ حجم الملف يتجاوز 25 ميجابايت');
+                return;
+            }
+            
+            const typeLabels = {
+                'report': 'تقرير بحثي',
+                'map': 'خريطة',
+                'study': 'دراسة أكاديمية',
+                'data': 'بيانات وإحصائيات',
+                'article': 'مقال',
+                'presentation': 'عرض تقديمي',
+                'document': 'وثيقة رسمية',
+                'other': 'أخرى'
+            };
+            
+            const iconMap = {
+                'report': '📄',
+                'map': '🗺️',
+                'study': '📚',
+                'data': '📊',
+                'article': '📝',
+                'presentation': '📽️',
+                'document': '📋',
+                'other': '📁'
+            };
+            
+            const today = new Date().toLocaleDateString('ar-DZ', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const newFile = `
+                <div class="country-item">
+                    <div>
+                        <div class="country-name">${iconMap[fileType]} ${fileTitle}</div>
+                        <div class="country-info">رفع بواسطة: ${uploaderName} | نوع: ${typeLabels[fileType]} | التاريخ: ${today}</div>
+                    </div>
+                    <span class="status-badge status-low">${fileExtension} - ${fileSize} MB</span>
+                </div>
+            `;
+            
+            const filesList = document.querySelector('#uploadedFilesList .country-list');
+            filesList.insertAdjacentHTML('afterbegin', newFile);
+            
+            document.getElementById('uploaderName').value = '';
+            document.getElementById('fileTitle').value = '';
+            document.getElementById('fileDescription').value = '';
+            document.getElementById('fileUpload').value = '';
+            
+            alert('✅ تم رفع الملف بنجاح!');
+        }
+    </script>
+</body>
+</html>
+
